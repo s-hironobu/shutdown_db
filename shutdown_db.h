@@ -13,6 +13,8 @@
  */
 #define SHUTDOWN_DB_COLS		 3
 
+#define SCHEMA "shutdown_db"
+
 enum mode
 {
 	INIT = 0,

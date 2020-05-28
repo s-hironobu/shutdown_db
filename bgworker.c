@@ -18,7 +18,6 @@
 #include "tcop/utility.h"
 
 #include "shutdown_db.h"
-#include "bgworker.h"
 #include "hashtable.h"
 
 /*

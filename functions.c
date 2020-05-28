@@ -15,7 +15,6 @@
 #include "pgstat.h"
 
 #include "shutdown_db.h"
-#include "bgworker.h"
 #include "hashtable.h"
 
 /*
