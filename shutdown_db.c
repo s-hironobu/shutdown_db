@@ -48,7 +48,11 @@ static void sddb_ExecutorStart(QueryDesc *queryDesc, int eflags);
 static void sddb_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
 								ProcessUtilityContext context,
 								ParamListInfo params, QueryEnvironment *queryEnv,
+#if PG_VERSION_NUM >= 130000
+								DestReceiver *dest, QueryCompletion *qc);
+#else
 								DestReceiver *dest, char *completionTag);
+#endif
 static Size sddb_memsize(void);
 static void sddb_shmem_startup(void);
 static void sddb_shmem_shutdown(int code, Datum arg);
@@ -246,14 +250,26 @@ static void
 sddb_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
 					ProcessUtilityContext context, ParamListInfo params,
 					QueryEnvironment *queryEnv, DestReceiver *dest,
+#if PG_VERSION_NUM >= 130000
+					QueryCompletion *qc)
+#else
 					char *completionTag)
+#endif
 {
 	if (prev_ProcessUtility)
 		prev_ProcessUtility(pstmt, queryString, context,
+#if PG_VERSION_NUM >= 130000
+							params, queryEnv, dest, qc);
+#else
 							params, queryEnv, dest, completionTag);
+#endif
 	else
 		standard_ProcessUtility(pstmt, queryString, context,
+#if PG_VERSION_NUM >= 130000
+								params, queryEnv, dest, qc);
+#else
 								params, queryEnv, dest, completionTag);
+#endif
 
 	if (sddb_check_ht() && !IsTransactionBlock())
 	{

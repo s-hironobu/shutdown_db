@@ -11,6 +11,7 @@
 #include "funcapi.h"
 #include "miscadmin.h"
 #include "executor/spi.h"
+#include "utils/acl.h"
 #include "utils/builtins.h"
 #include "pgstat.h"
 
