@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------------
  * shutdown_db.c
  *
- * Copyright (c) 2008-2020, PostgreSQL Global Development Group
- * Copyright (c) 2020, Hironobu Suzuki @ interdb.jp
+ * Copyright (c) 2020-2021, Hironobu Suzuki @ interdb.jp
+ * Copyright (c) 2008-2021, PostgreSQL Global Development Group
  *-------------------------------------------------------------------------
  */
 #include "postgres.h"
@@ -12,6 +12,9 @@
 #include "funcapi.h"
 #include "miscadmin.h"
 #include "storage/ipc.h"
+#if PG_VERSION_NUM >= 140000
+#include "storage/shmem.h"
+#endif
 #include "tcop/utility.h"
 #include "pgstat.h"
 
@@ -46,6 +49,9 @@ void		_PG_fini(void);
 
 static void sddb_ExecutorStart(QueryDesc *queryDesc, int eflags);
 static void sddb_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
+#if PG_VERSION_NUM >= 140000
+								bool readOnlyTree,
+#endif
 								ProcessUtilityContext context,
 								ParamListInfo params, QueryEnvironment *queryEnv,
 #if PG_VERSION_NUM >= 130000
@@ -247,24 +253,35 @@ sddb_ExecutorStart(QueryDesc *queryDesc, int eflags)
  * ProcessUtility hook
  */
 static void
-sddb_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
-					ProcessUtilityContext context, ParamListInfo params,
-					QueryEnvironment *queryEnv, DestReceiver *dest,
+			sddb_ProcessUtility(PlannedStmt *pstmt, const char *queryString,
+#if PG_VERSION_NUM >= 140000
+								bool readOnlyTree,
+#endif
+								ProcessUtilityContext context, ParamListInfo params,
+								QueryEnvironment *queryEnv, DestReceiver *dest,
 #if PG_VERSION_NUM >= 130000
-					QueryCompletion *qc)
+								QueryCompletion *qc)
 #else
-					char *completionTag)
+								char *completionTag)
 #endif
 {
 	if (prev_ProcessUtility)
-		prev_ProcessUtility(pstmt, queryString, context,
+		prev_ProcessUtility(pstmt, queryString,
+#if PG_VERSION_NUM >= 140000
+							readOnlyTree,
+#endif
+							context,
 #if PG_VERSION_NUM >= 130000
 							params, queryEnv, dest, qc);
 #else
 							params, queryEnv, dest, completionTag);
 #endif
 	else
-		standard_ProcessUtility(pstmt, queryString, context,
+		standard_ProcessUtility(pstmt, queryString,
+#if PG_VERSION_NUM >= 140000
+								readOnlyTree,
+#endif
+								context,
 #if PG_VERSION_NUM >= 130000
 								params, queryEnv, dest, qc);
 #else

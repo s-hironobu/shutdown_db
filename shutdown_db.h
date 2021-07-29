@@ -8,6 +8,8 @@
 #ifndef __SHUTDOWN_DB_H__
 #define __SHUTDOWN_DB_H__
 
+#include "storage/lwlock.h"
+
 /*
  * Define constants
  */

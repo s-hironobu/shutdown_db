@@ -10,6 +10,9 @@
 #include "miscadmin.h"
 #include "postmaster/bgworker.h"
 #include "storage/ipc.h"
+#if PG_VERSION_NUM >= 140000
+#include "storage/latch.h"
+#endif
 #include "access/xact.h"
 #include "executor/spi.h"
 #include "pgstat.h"

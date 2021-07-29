@@ -59,7 +59,13 @@ is_allowed_role(void)
 {
 	/* Superusers or members of pg_read_all_stats members are allowed */
 #if PG_VERSION_NUM >= 100000
-	return is_member_of_role(GetUserId(), DEFAULT_ROLE_READ_ALL_STATS);
+	return is_member_of_role(GetUserId(),
+#if PG_VERSION_NUM >= 140000
+							 ROLE_PG_READ_ALL_STATS
+#else
+							 DEFAULT_ROLE_READ_ALL_STATS
+#endif
+		);
 #else
 	return superuser();
 #endif
@@ -541,7 +547,13 @@ sddb_show_db(PG_FUNCTION_ARGS)
 
 	/* Superusers or members of pg_read_all_stats members are allowed */
 #if PG_VERSION_NUM >= 100000
-	is_allowed_role = is_member_of_role(userid, DEFAULT_ROLE_READ_ALL_STATS);
+	is_allowed_role = is_member_of_role(userid,
+#if PG_VERSION_NUM >= 140000
+										ROLE_PG_READ_ALL_STATS
+#else
+										DEFAULT_ROLE_READ_ALL_STATS
+#endif
+		);
 #else
 	is_allowed_role = superuser();
 #endif
