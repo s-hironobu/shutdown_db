@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------------
  * hashtable.h
  *
- * Copyright (c) 2008-2019, PostgreSQL Global Development Group
- * Copyright (c) 2020, hironobu suzuki@interdb.jp
+ * Copyright (c) 2008-2022, PostgreSQL Global Development Group
+ * Copyright (c) 2020-2022, hironobu suzuki@interdb.jp
  *-------------------------------------------------------------------------
  */
 #ifndef __HASHTABLE_H__
