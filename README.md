@@ -147,6 +147,7 @@ DROP SCHEMA shutdown_db CASCADE;
 
 ## Change Log
 
+- 24th Sep, 2023, Supported Version 16.
 - 31th Dec, 2022, Checked supporting Version 15.
 - 29th Aug, 2021, Supported Version 14.
 - 27th May, 2020: Version 1.0 Alpha 1 Released.

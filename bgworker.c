@@ -37,8 +37,13 @@ static int	sddb_killer_naptime = 15;
 /*
  * Function declarations
  */
-void		shutdown_db_init(Datum) pg_attribute_noreturn();
+#if PG_VERSION_NUM >= 160000
+PGDLLEXPORT void		shutdown_db_init(Datum main_arg);
+#else
 void		shutdown_db_init(Datum main_arg);
+#endif
+
+void		shutdown_db_init(Datum) pg_attribute_noreturn();
 
 PG_FUNCTION_INFO_V1(sddb_killer_launch);
 void		sddb_killer_main(Datum) pg_attribute_noreturn();

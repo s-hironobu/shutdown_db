@@ -40,6 +40,9 @@ HTAB	   *sddb_hash = NULL;
  * Static variables
  */
 static int	max_db_number;
+#if PG_VERSION_NUM >= 160000
+static shmem_request_hook_type prev_shmem_request_hook = NULL;
+#endif
 
 /*
  * Function declarations
@@ -63,6 +66,9 @@ static Size sddb_memsize(void);
 static void sddb_shmem_startup(void);
 static void sddb_shmem_shutdown(int code, Datum arg);
 static bool sddb_check_ht(void);
+#if PG_VERSION_NUM >= 160000
+static void shutdown_db_shmem_request(void);
+#endif
 
 /*
  * Module callback
@@ -90,11 +96,18 @@ _PG_init(void)
 
 	EmitWarningsOnPlaceholders("shutdown_db");
 
+#if PG_VERSION_NUM >= 160000
+	prev_shmem_request_hook = shmem_request_hook;
+	shmem_request_hook = shutdown_db_shmem_request;
+#else
 	RequestAddinShmemSpace(sddb_memsize());
+#endif
+#if PG_VERSION_NUM < 160000
 #if PG_VERSION_NUM >= 90600
 	RequestNamedLWLockTranche("shutdown_db", 1);
 #else
 	RequestAddinLWLocks(1);
+#endif
 #endif
 
 	/* Install hooks. */
@@ -124,6 +137,17 @@ _PG_init(void)
 	RegisterBackgroundWorker(&worker);
 }
 
+#if PG_VERSION_NUM >= 160000
+static void
+shutdown_db_shmem_request(void)
+{
+	if (prev_shmem_request_hook)
+		prev_shmem_request_hook();
+
+	RequestAddinShmemSpace(sddb_memsize());
+	RequestNamedLWLockTranche("shutdown_db", 1);
+}
+#endif
 
 void
 _PG_fini(void)
@@ -132,6 +156,9 @@ _PG_fini(void)
 	shmem_startup_hook = prev_shmem_startup_hook;
 	ProcessUtility_hook = prev_ProcessUtility;
 	ExecutorStart_hook = prev_ExecutorStart;
+#if PG_VERSION_NUM >= 160000
+	shmem_request_hook = prev_shmem_request_hook;
+#endif
 }
 
 /*
@@ -293,5 +320,4 @@ static void
 		elog(WARNING, "This database has already been shutdown and this process will be killed within seconds.");
 		return;
 	}
-
 }
