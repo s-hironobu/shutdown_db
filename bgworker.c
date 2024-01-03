@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------------
  * bgworker.c
  *
- * Copyright (c) 2008-2023, PostgreSQL Global Development Group
- * Copyright (c) 2020-2023, Hironobu Suzuki @ interdb.jp
+ * Copyright (c) 2008-2024, PostgreSQL Global Development Group
+ * Copyright (c) 2020-2024, Hironobu Suzuki @ interdb.jp
  *-------------------------------------------------------------------------
  */
 #include "postgres.h"
