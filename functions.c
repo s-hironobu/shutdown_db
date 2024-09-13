@@ -615,7 +615,6 @@ sddb_show_db(PG_FUNCTION_ARGS)
 
 		LWLockRelease(sddb->lock);
 
-		tuplestore_donestoring(tupstore);
 	}
 	return (Datum) 0;
 }
