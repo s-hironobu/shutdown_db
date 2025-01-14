@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------------
  * shutdown_db.h
  *
- * Copyright (c) 2008-2024, PostgreSQL Global Development Group
- * Copyright (c) 2020-2024, hironobu suzuki@interdb.jp
+ * Copyright (c) 2008-2025, PostgreSQL Global Development Group
+ * Copyright (c) 2020-2025, hironobu suzuki@interdb.jp
  *-------------------------------------------------------------------------
  */
 #ifndef __SHUTDOWN_DB_H__

@@ -1,8 +1,8 @@
 /*-------------------------------------------------------------------------
  * hashtable.c
  *
- * Copyright (c) 2008-2024, PostgreSQL Global Development Group
- * Copyright (c) 2020-2024, Hironobu Suzuki @ interdb.jp
+ * Copyright (c) 2008-2025, PostgreSQL Global Development Group
+ * Copyright (c) 2020-2025, Hironobu Suzuki @ interdb.jp
  *-------------------------------------------------------------------------
  */
 #include "postgres.h"
